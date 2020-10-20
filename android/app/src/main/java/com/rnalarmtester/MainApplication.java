@@ -1,7 +1,13 @@
 package com.rnalarmtester;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.facebook.react.ReactInstanceManager;
@@ -43,11 +49,17 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
+  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+
+    Log.d("MainApplication", "In onCreate");
+
+    // immediately schedule the first alarm
+    AlarmReceiver.scheduleExactAlarm(this, (AlarmManager) getSystemService(ALARM_SERVICE));
   }
 
   /**
@@ -57,8 +69,7 @@ public class MainApplication extends Application implements ReactApplication {
    * @param context
    * @param reactInstanceManager
    */
-  private static void initializeFlipper(
-      Context context, ReactInstanceManager reactInstanceManager) {
+  private static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
       try {
         /*
