@@ -9,9 +9,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
-  ScrollView,
   View,
   Text,
+  FlatList,
   NativeModules,
   NativeEventEmitter,
 } from 'react-native';
@@ -22,9 +22,13 @@ const App = () => {
 
   useEffect(() => {
     const eventEmitter = new NativeEventEmitter(NativeModules.AlarmModule);
-    this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
-      console.log(event);
-    });
+    if(!this.eventListener) {
+      this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
+        console.log(event); 
+
+        // alarm has occurred. add the event to a state
+      });
+    }
   });
 
   return (

@@ -33,10 +33,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // TODO: IMPLEMENT THIS
         // start with just a log, then after that implement event to send this back to react native layer
-        Log.i(TAG, "AlarmReceiver");
         // send an event to react native
-        String someData = "my-alarm-data";
-        sendEvent("ALARM_EVENT", someData);
+        String timestamp = getTimestamp();
+        sendEvent("ALARM_EVENT", timestamp);
 
 
         wakeLock.release();
@@ -64,5 +63,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         catch(Exception e){
             Log.d("ReactNativeJS","Exception in sendEvent in EventReminderBroadcastReceiver is:"+e.toString());
         }
+    }
+
+    private String getTimestamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS");
+        Date currentTimestamp = new Date(System.currentTimeMillis());
+        String timestampToShow = sdf.format(currentTimestamp);
+        return timestampToShow;
     }
 }
