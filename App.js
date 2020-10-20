@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -20,9 +20,11 @@ const App = () => {
   const [deviceName, setDeviceName] = useState('');
   NativeModules.Device.getDeviceName((err, name) => setDeviceName(name));
 
-  const eventEmitter = new NativeEventEmitter(NativeModules.AlarmModule);
-  this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
-    console.log(event);
+  useEffect(() => {
+    const eventEmitter = new NativeEventEmitter(NativeModules.AlarmModule);
+    this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
+      console.log(event);
+    });
   });
 
   return (
