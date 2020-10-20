@@ -35,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
 
             // add the device package
             packages.add(new DevicePackage());
+            packages.add(new AlarmPackage());
           return packages;
         }
 
@@ -55,11 +56,6 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
-
-    Log.d("MainApplication", "In onCreate");
-
-    // immediately schedule the first alarm
-    AlarmReceiver.scheduleExactAlarm(this, (AlarmManager) getSystemService(ALARM_SERVICE));
   }
 
   /**

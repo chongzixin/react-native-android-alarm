@@ -11,6 +11,9 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.facebook.react.bridge.ReactContext;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -30,7 +33,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // TODO: IMPLEMENT THIS
         // start with just a log, then after that implement event to send this back to react native layer
-        Log.i(TAG, "in AlarmReceiver");
+        Log.i(TAG, "AlarmReceiver");
+        // send an event to react native
+        String someData = "my-alarm-data";
+        sendEvent("ALARM_EVENT", someData);
+
 
         wakeLock.release();
     }
@@ -46,5 +53,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         alarms.setAlarmClock(new AlarmManager.AlarmClockInfo(System.currentTimeMillis()+ALARM_FREQUENCY, null), pendingIntent);
+    }
+
+    private void sendEvent(String eventName, String eventText) {
+        try{
+            ReactContext reactContext = AlarmModule.reactContext;
+            reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                    .emit(eventName, eventText);
+        }
+        catch(Exception e){
+            Log.d("ReactNativeJS","Exception in sendEvent in EventReminderBroadcastReceiver is:"+e.toString());
+        }
     }
 }
