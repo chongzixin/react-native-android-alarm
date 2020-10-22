@@ -33,9 +33,12 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         // TODO: IMPLEMENT THIS
         // start with just a log, then after that implement event to send this back to react native layer
-        // send an event to react native
         String timestamp = getTimestamp();
+
+        // sends event using Native Emitter
         sendEvent("ALARM_EVENT", timestamp);
+        // send using HeadlessJS
+
 
 
         wakeLock.release();

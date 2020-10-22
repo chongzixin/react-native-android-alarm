@@ -24,7 +24,6 @@ const App = () => {
   const [timestampList, setTimestampList] = useState([]);
 
   useEffect(() => {
-    // TODO: this seems to be causing memory leaks
     const eventEmitter = new NativeEventEmitter(NativeModules.AlarmModule);
     if(!this.eventListener) {
       this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
@@ -34,11 +33,12 @@ const App = () => {
         // TODO: write to a file
       });
     }
-  });
+  }, []);
 
   return (
     <View style={styles.screen}>
       <View style={styles.listContainer}>
+        <Text>Running on {deviceName}</Text>
         <FlatList 
           contentContainerStyle={styles.list}
           data={timestampList}
@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 5,
   },
 });
 

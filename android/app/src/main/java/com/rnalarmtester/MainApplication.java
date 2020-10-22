@@ -34,7 +34,6 @@ public class MainApplication extends Application implements ReactApplication {
           // packages.add(new MyReactNativePackage());
 
             // add the device package
-            packages.add(new DevicePackage());
             packages.add(new AlarmPackage());
           return packages;
         }

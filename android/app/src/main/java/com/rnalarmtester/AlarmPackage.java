@@ -29,6 +29,7 @@ public class AlarmPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
         // we import the module file here
         modules.add(new AlarmModule(reactContext));
+        modules.add(new DeviceModule(reactContext));
 
         return modules;
     }
