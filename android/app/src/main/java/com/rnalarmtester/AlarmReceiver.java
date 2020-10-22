@@ -6,11 +6,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.facebook.react.HeadlessJsTaskService;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 
@@ -36,9 +38,15 @@ public class AlarmReceiver extends BroadcastReceiver {
         String timestamp = getTimestamp();
 
         // sends event using Native Emitter
-        sendEvent("ALARM_EVENT", timestamp);
-        // send using HeadlessJS
+        // sendEvent("ALARM_EVENT", timestamp);
 
+        // send using HeadlessJS
+        Intent alarmHeadlessIntent = new Intent(context, AlarmHeadlessService.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("ALARM_EVENT", timestamp);
+        alarmHeadlessIntent.putExtras(bundle);
+        context.startService(alarmHeadlessIntent);
+        HeadlessJsTaskService.acquireWakeLockNow(context);
 
 
         wakeLock.release();
