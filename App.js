@@ -13,7 +13,8 @@ import {
   Text,
   FlatList,
   NativeModules,
-  NativeEventEmitter,
+  PermissionsAndroid,
+  Button,
 } from 'react-native';
 
 import { createStore, combineReducers, applyMiddleware } from 'redux';
@@ -26,6 +27,27 @@ const rootReducer = combineReducers({
   data: myReducer,
 })
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
+const requestLocationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      {
+        title: 'RNAlarmTester',
+        message: 'This app requires locaion permission.',
+      }
+    )
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      console.log("You can use the location")
+      alert("You can use the location");
+    } else {
+      console.log("location permission denied")
+      alert("Location permission denied");
+    }
+  } catch (err) {
+    console.warn(err)
+  }
+}
 
 // created a wrapper because we are using the store inside App itself.
 const AppWrapper = () => {
@@ -44,6 +66,7 @@ const App = () => {
   const dispatch = useDispatch();
   
   useEffect(() => {
+    // read the records from the store
     dispatch(myActions.readFromStore());
   }, [dispatch]);
 
@@ -51,10 +74,11 @@ const App = () => {
     <View style={styles.screen}>
       <View style={styles.listContainer}>
         <Text>Running on {deviceName}</Text>
+        <Button title="Request Location Permissions" onPress={requestLocationPermission} />
         <FlatList 
           contentContainerStyle={styles.list}
           data={storeData}
-          renderItem={itemData => (<Text>{itemData.item}</Text>)}
+          renderItem={itemData => (<Text style={styles.listItem}>{itemData.item}</Text>)}
           keyExtractor={item => item}
         />
       </View>
@@ -69,6 +93,9 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingHorizontal: 16,
     paddingVertical: 5,
+  },
+  listItem: {
+    fontSize: 12,
   },
 });
 
