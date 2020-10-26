@@ -23,11 +23,14 @@ import ReduxThunk from 'redux-thunk';
 import myReducer from './store/reducer';
 import * as myActions from './store/action';
 
+import RNDisableBatteryOptimizationsAndroid from 'react-native-disable-battery-optimizations-android';
+
 const rootReducer = combineReducers({
   data: myReducer,
 })
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
+// ask for location permissions
 const requestLocationPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -47,6 +50,11 @@ const requestLocationPermission = async () => {
   } catch (err) {
     console.warn(err)
   }
+}
+
+// ask for whitelisting permissions
+const requestWhitelistPermission = () => {
+  RNDisableBatteryOptimizationsAndroid.enableBackgroundServicesDialogue();
 }
 
 // created a wrapper because we are using the store inside App itself.
@@ -73,8 +81,13 @@ const App = () => {
   return (
     <View style={styles.screen}>
       <View style={styles.listContainer}>
-        <Text>Running on {deviceName}</Text>
-        <Button title="Request Location Permissions" onPress={requestLocationPermission} />
+          <Text>Running on {deviceName}</Text>
+          <View style={styles.buttonStyle}>
+            <Button title="Request Location Permissions" onPress={requestLocationPermission} />
+          </View>
+          <View style={styles.buttonStyle}>
+            <Button title="Add to Whitelist" onPress={requestWhitelistPermission} />
+          </View>
         <FlatList 
           contentContainerStyle={styles.list}
           data={storeData}
@@ -97,6 +110,9 @@ const styles = StyleSheet.create({
   listItem: {
     fontSize: 12,
   },
+  buttonStyle: {
+    paddingBottom: 10,
+  }
 });
 
 export default AppWrapper;
