@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    private static final int ALARM_FREQUENCY = 3*1000;
+    private static final int ALARM_FREQUENCY = 60*1000;
     private static final String TAG = "ALARM_RECEIVER";
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

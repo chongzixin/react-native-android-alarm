@@ -16,24 +16,36 @@ import {
   NativeEventEmitter,
 } from 'react-native';
 
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import ReduxThunk from 'redux-thunk';
+import myReducer from './store/reducer';
+import * as myActions from './store/action';
+
+const rootReducer = combineReducers({
+  data: myReducer,
+})
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
+
+// created a wrapper because we are using the store inside App itself.
+const AppWrapper = () => {
+  return (
+    <Provider store={store}>
+      <App />
+    </Provider>
+  )
+}
+
 const App = () => {
   const [deviceName, setDeviceName] = useState('');
   NativeModules.Device.getDeviceName((err, name) => setDeviceName(name));
 
-  // TODO: read flatlist data from a file and use it to init the timestampList
-  const [timestampList, setTimestampList] = useState([]);
-
+  const storeData = useSelector(state => state.data.data);
+  const dispatch = useDispatch();
+  
   useEffect(() => {
-    const eventEmitter = new NativeEventEmitter(NativeModules.AlarmModule);
-    if(!this.eventListener) {
-      this.eventListener = eventEmitter.addListener('ALARM_EVENT', (event) => {
-        // alarm has occurred. add the event to a state
-        console.log("current event is: " + event); 
-        setTimestampList(currentList => [event, ...currentList]);
-        // TODO: write to a file
-      });
-    }
-  }, []);
+    dispatch(myActions.readFromStore());
+  }, [dispatch]);
 
   return (
     <View style={styles.screen}>
@@ -41,7 +53,7 @@ const App = () => {
         <Text>Running on {deviceName}</Text>
         <FlatList 
           contentContainerStyle={styles.list}
-          data={timestampList}
+          data={storeData}
           renderItem={itemData => (<Text>{itemData.item}</Text>)}
           keyExtractor={item => item}
         />
@@ -60,4 +72,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AppWrapper;
+export { AppWrapper as App, store };
