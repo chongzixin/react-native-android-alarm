@@ -112,6 +112,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     private void processLocation(Location location) {
         Context context = MainApplication.getContext();
+        Log.d(TAG, location.toString());
 
         Log.i(TAG, "can get location here leh: " + getLocationText(location));
         String toWrite = getTimestamp() + ": " + getLocationText(location);

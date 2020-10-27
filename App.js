@@ -37,12 +37,14 @@ const requestLocationPermission = async () => {
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
         title: 'RNAlarmTester',
-        message: 'This app requires locaion permission.',
+        message: 'This app requires location permission.',
       }
     )
     if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      console.log("You can use the location")
-      alert("You can use the location");
+      console.log("Location Permission Granted")
+      alert("Location Permission granted, starting foreground service");
+      // also start the foreground service
+      NativeModules.AlarmModule.startService();
     } else {
       console.log("location permission denied")
       alert("Location permission denied");

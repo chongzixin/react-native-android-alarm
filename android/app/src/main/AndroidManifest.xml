@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
       android:name=".MainApplication"
@@ -31,6 +32,11 @@
         <!-- headless service to communicate with JS -->
         <service android:name="com.rnalarmtester.AlarmHeadlessService" />
 
+        <service android:name="com.rnalarmtester.AlarmForegroundService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location"
+            />
 
         <!-- declare AlarmReceiver -->
         <receiver android:name="com.rnalarmtester.AlarmReceiver"/>
